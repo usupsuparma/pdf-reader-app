@@ -27,6 +27,7 @@ class EbookController extends Controller
     {
         try {
             // Validasi file upload sudah dilakukan oleh StoreEbookRequest
+            $request->validate();
             DB::beginTransaction();
             $fileName = '';
             if ($request->hasFile('file')) {
@@ -35,13 +36,8 @@ class EbookController extends Controller
                 $path = 'pdf/' . $originalName;
                 $filePath = public_path('pdf/' . $file->getClientOriginalName());
                 $fileName = $path;
-                // Pindahkan file ke public/pdf
                 $file->move(public_path('pdf'), $file->getClientOriginalName());
-
-                // Unzip file ke folder public/pdf
                 $this->unzipFile($filePath, public_path('pdf'));
-
-                // Hapus file zip setelah diekstrak
 
                 if (file_exists($filePath)) {
                     if (unlink($filePath)) {
@@ -58,7 +54,6 @@ class EbookController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             dd($th->getMessage());
-            // Tangani kesalahan
             return Redirect::back()->withErrors(['error' => $th->getMessage()]);
         }
     }
