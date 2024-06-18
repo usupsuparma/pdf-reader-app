@@ -23,39 +23,41 @@ class EbookController extends Controller
         return view('ebook.add-ebook');
     }
 
-    public function store(StoreEbookRequest $request): RedirectResponse
+    public function store(StoreEbookRequest $request)
     {
-        try {
-            DB::beginTransaction();
-            $request->validated();
-            $fileName = '';
-            if ($request->hasFile('file')) {
-                $file = $request->file('file');
-                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $path = 'pdf/' . $originalName;
-                $filePath = public_path('pdf/' . $file->getClientOriginalName());
-                $fileName = $path;
-                $file->move(public_path('pdf'), $file->getClientOriginalName());
-                $this->unzipFile($filePath, public_path('pdf'));
+        if ($request->ajax()) {
+            try {
+                DB::beginTransaction();
+                $request->validated();
+                $fileName = '';
+                if ($request->hasFile('file')) {
+                    $file = $request->file('file');
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $path = 'pdf/' . $originalName;
+                    $filePath = public_path('pdf/' . $file->getClientOriginalName());
+                    $fileName = $path;
+                    $file->move(public_path('pdf'), $file->getClientOriginalName());
+                    $this->unzipFile($filePath, public_path('pdf'));
 
-                if (file_exists($filePath)) {
-                    if (unlink($filePath)) {
-                        Log::info('File ZIP berhasil dihapus: ' . $filePath);
-                    } else {
-                        Log::error('Gagal menghapus file ZIP: ' . $filePath);
+                    if (file_exists($filePath)) {
+                        if (unlink($filePath)) {
+                            Log::info('File ZIP berhasil dihapus: ' . $filePath);
+                        } else {
+                            Log::error('Gagal menghapus file ZIP: ' . $filePath);
+                        }
                     }
                 }
+                $request->merge(['path' => $fileName]);
+                EbookModel::create($request->all());
+                DB::commit();
+                return response()->json(['status' => 'success']);
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                return response()->json(['status' => 'error', 'message' => $th->getMessage()]);
             }
-            $request->merge(['path' => $fileName]);
-            EbookModel::create($request->all());
-            DB::commit();
-            return Redirect::back()->with('status', 'profile-updated');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            dd($th->getMessage());
-            return Redirect::back()->withErrors(['error' => $th->getMessage()]);
         }
     }
+
 
     private function unzipFile($filePath, $extractPath)
     {
