@@ -27,7 +27,7 @@ class EbookController extends Controller
     {
         try {
             // Validasi file upload sudah dilakukan oleh StoreEbookRequest
-            $request->validate();
+            $request->validated();
             DB::beginTransaction();
             $fileName = '';
             if ($request->hasFile('file')) {

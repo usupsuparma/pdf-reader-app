@@ -16,7 +16,7 @@ class StoreEbookRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:150'],
-            'file' => 'required|mimes:zip',
+            'file' => 'required',
         ];
     }
 
