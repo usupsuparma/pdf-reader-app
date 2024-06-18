@@ -26,7 +26,6 @@ class EbookController extends Controller
     public function store(Request $request): RedirectResponse
     {
         try {
-            dd($request->all());
             DB::beginTransaction();
             $fileName = '';
             if ($request->hasFile('file')) {
