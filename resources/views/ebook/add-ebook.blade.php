@@ -88,6 +88,7 @@
             fetch(form.action, options)
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     if (data.status === 'success') {
                         progressBar.style.width = '0%';
                         progressBar.innerHTML = '0%';
@@ -103,7 +104,7 @@
                     }
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log(error.message);
                     Swal.fire({
                         title: "Upload Failed!",
                         text: "Your upload encountered an error: " + error.message,
