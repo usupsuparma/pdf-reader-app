@@ -20,6 +20,7 @@
                         <th class="px-4 py-2">Name</th>
                         <th class="px-4 py-2">Path</th>
                         <th class="px-4 py-2">View</th>
+                        <th class="px-4 py-2">Action</th>
                     </thead>
                     <tbody>
                         @foreach ($ebooks as $item)
@@ -33,6 +34,11 @@
                                         href="{{ $item->path }}/">
                                         {{ __('Open') }}
                                     </a>
+                                </td>
+                                <td class="border px-4 py2">
+                                    <button>
+                                        <i class="fa fa-address-book" aria-hidden="true"></i>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
