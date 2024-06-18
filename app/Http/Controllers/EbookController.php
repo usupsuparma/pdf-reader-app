@@ -23,10 +23,11 @@ class EbookController extends Controller
         return view('ebook.add-ebook');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreEbookRequest $request): RedirectResponse
     {
         try {
             DB::beginTransaction();
+            $request->validated();
             $fileName = '';
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
