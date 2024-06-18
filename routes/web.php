@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EbookController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ProfileController;
+use App\Models\EbookModel;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,20 +19,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $users = [
-        ['id' => 1, 'name' => 'Lindsay Walton', 'title' => 'Front-end Developer', 'email' => 'lindsay.walton@example.com', 'role' => 'Member'],
-        ['id' => 2, 'name' => 'Courtney Henry', 'title' => 'Designer', 'email' => 'courtney.henry@example.com', 'role' => 'Admin'],
-        ['id' => 3, 'name' => 'Tom Cook', 'title' => 'Director of Product', 'email' => 'tom.cook@example.com', 'role' => 'Member'],
-        ['id' => 4, 'name' => 'Whitney Francis', 'title' => 'Copywriter', 'email' => 'whitney.francis@example.com', 'role' => 'Admin'],
-        ['id' => 5, 'name' => 'Leonard Krasner', 'title' => 'Senior Designer', 'email' => 'leonard.krasner@example.com', 'role' => 'Owner'],
-        ['id' => 6, 'name' => 'Floyd Miles', 'title' => 'Principal Designer', 'email' => 'floyd.miles@example.com', 'role' => 'Member'],
-    ];
-    return view('welcome', compact('users'));
+    $ebooks = EbookModel::all();
+    return view('welcome', compact('ebooks'));
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::prefix('ebooks')->group(function () {

@@ -2,14 +2,22 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User List</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
-    <div class="container mx-auto mt-10">
+    <div class="container mx-auto pt-16">
         @if (Route::has('login'))
             <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
                 @auth
@@ -30,35 +38,33 @@
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <div class="px-6 py-4">
                 <h1 class="text-xl font-bold">Ebooks</h1>
-                <p class="text-gray-600">A list of ebook</p>
+                <p class="text-gray-600">A list of ebooks</p>
             </div>
             <div class="px-6 py-4">
                 <table class="min-w-full">
                     <thead>
                         <tr>
+                            <th class="px-4 py-2">No</th>
                             <th class="px-4 py-2">Name</th>
-                            <th class="px-4 py-2">Title</th>
-                            <th class="px-4 py-2">Email</th>
-                            <th class="px-4 py-2">Role</th>
-                            <th class="px-4 py-2"></th>
+                            <th class="px-4 py-2">View</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($ebooks as $item)
                             <tr class="{{ $loop->even ? 'bg-gray-100' : '' }}">
-                                <td class="border px-4 py-2">{{ $user['name'] }}</td>
-                                <td class="border px-4 py-2">{{ $user['title'] }}</td>
-                                <td class="border px-4 py-2">{{ $user['email'] }}</td>
-                                <td class="border px-4 py-2">{{ $user['role'] }}</td>
-                                <td class="border px-4 py-2 text-blue-600"><a
-                                        href="/users/{{ $user['id'] }}/edit">Edit</a></td>
+                                <td class="border px-4 py-2">{{ $loop->index + 1 }}</td>
+                                <td class="border px-4 py-2">{{ $item->name }}</td>
+                                <td class="border px-4 py-2">
+                                    <a href="" target="_blank" rel="noopener noreferrer"></a>
+                                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                        href="{{ $item->path }}/">
+                                        {{ __('Open') }}
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <div class="mt-4">
-                    <a href="/users/create" class="bg-purple-600 text-white px-4 py-2 rounded">Add user</a>
-                </div>
             </div>
         </div>
     </div>

@@ -16,11 +16,27 @@
 
                 <table class="table-auto border-collapse min-w-full">
                     <thead>
-                        <th>No</th>
-                        <th>Name</th>
-                        <th>Path</th>
-                        <th>Action</th>
+                        <th class="px-4 py-2">No</th>
+                        <th class="px-4 py-2">Name</th>
+                        <th class="px-4 py-2">Path</th>
+                        <th class="px-4 py-2">View</th>
                     </thead>
+                    <tbody>
+                        @foreach ($ebooks as $item)
+                            <tr class="{{ $loop->even ? 'bg-gray-100' : '' }}">
+                                <td class="border px-4 py-2">{{ $loop->index + 1 }}</td>
+                                <td class="border px-4 py-2">{{ $item->name }}</td>
+                                <td class="border px-4 py-2">{{ $item->path }}</td>
+                                <td class="border px-4 py-2">
+                                    <a href="" target="_blank" rel="noopener noreferrer"></a>
+                                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                        href="{{ $item->path }}/">
+                                        {{ __('Open') }}
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
                 </table>
 
             </div>
