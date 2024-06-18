@@ -44,7 +44,7 @@
                                 <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
                                     <div id="progress-bar"
                                         class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                                        style="width: 0%"> 0%</div>
+                                        style="width: 0%">0%</div>
                                 </div>
                             </div>
 
@@ -76,6 +76,43 @@
             // Show progress bar
             progressContainer.classList.remove('hidden');
 
+            const options = {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData,
+            };
+
+            fetch(form.action, options)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        progressBar.style.width = '0%';
+                        progressBar.innerHTML = '0%';
+                        // Hide progress bar after upload is complete
+                        progressContainer.classList.add('hidden');
+                        Swal.fire({
+                            title: "Uploaded!",
+                            text: "Your file has been uploaded.",
+                            icon: "success"
+                        });
+                    } else {
+                        throw new Error(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    Swal.fire({
+                        title: "Upload Failed!",
+                        text: "Your upload encountered an error: " + error.message,
+                        icon: "error"
+                    });
+                    // Hide progress bar if upload fails
+                    progressContainer.classList.add('hidden');
+                });
+
             const xhr = new XMLHttpRequest();
             xhr.open('POST', form.action, true);
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -88,28 +125,6 @@
                     progressBar.innerHTML = Math.floor(percentComplete) + '%';
                 }
             });
-
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    progressBar.style.width = '0%';
-                    progressBar.innerHTML = '0%';
-                    // Hide progress bar after upload is complete
-                    progressContainer.classList.add('hidden');
-                    Swal.fire({
-                        title: "Uploaded!",
-                        text: "Your file has been uploaded.",
-                        icon: "success"
-                    });
-                } else if (xhr.readyState == 4) {
-                    Swal.fire({
-                        title: "Upload!",
-                        text: "Your upload is error",
-                        icon: "error"
-                    });
-                    // Hide progress bar if upload fails
-                    progressContainer.classList.add('hidden');
-                }
-            };
 
             xhr.send(formData);
         });
