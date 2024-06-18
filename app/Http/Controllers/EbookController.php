@@ -23,11 +23,10 @@ class EbookController extends Controller
         return view('ebook.add-ebook');
     }
 
-    public function store(StoreEbookRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         try {
             dd($request->all());
-            $request->validated();
             DB::beginTransaction();
             $fileName = '';
             if ($request->hasFile('file')) {
@@ -63,19 +62,7 @@ class EbookController extends Controller
         $zip = new ZipArchive;
 
         if ($zip->open($filePath) === TRUE) {
-            // Ekstrak file ke folder tujuan
             $zip->extractTo($extractPath);
-
-            // // Dapatkan nama folder pertama di dalam ZIP
-            // $firstFolderName = $zip->getNameIndex(0);
-            // $firstFolderName = explode('/', $firstFolderName)[0];
-
-            // // Pindahkan isi folder ke lokasi ekstraksi utama jika ada
-            // $nestedFolderPath = $extractPath . '/' . $firstFolderName;
-            // if (is_dir($nestedFolderPath)) {
-            //     $this->moveFiles($nestedFolderPath, $extractPath);
-            //     rmdir($nestedFolderPath);
-            // }
 
             $zip->close();
         } else {
