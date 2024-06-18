@@ -26,7 +26,7 @@ class EbookController extends Controller
     public function store(StoreEbookRequest $request): RedirectResponse
     {
         try {
-            // Validasi file upload sudah dilakukan oleh StoreEbookRequest
+            dd($request->all());
             $request->validated();
             DB::beginTransaction();
             $fileName = '';
