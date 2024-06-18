@@ -55,8 +55,8 @@
                                 <td class="border px-4 py-2">{{ $loop->index + 1 }}</td>
                                 <td class="border px-4 py-2">{{ $item->name }}</td>
                                 <td class="border px-4 py-2">
-                                    <a href="" target="_blank" rel="noopener noreferrer"></a>
-                                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    <a target="_blank"
+                                        class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         href="{{ $item->path }}/">
                                         {{ __('Open') }}
                                     </a>
